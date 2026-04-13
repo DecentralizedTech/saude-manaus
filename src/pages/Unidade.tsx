@@ -108,7 +108,7 @@ export default function UnidadePage() {
         {analise && (
           <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-gray-700 leading-relaxed">
             <p className="text-xs font-semibold text-blue-600 mb-2 flex items-center gap-1">
-              🤖 Análise gerada por IA · Gemma 4
+              🤖 Análise gerada por IA · GPT OSS 20B
             </p>
             {analise}
           </div>
