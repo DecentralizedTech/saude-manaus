@@ -3,6 +3,7 @@
 
 export async function chatCompletion(messages, maxTokens = 600) {
   const models = [
+    'openai/gpt-oss-20b:free',
     'google/gemma-3-27b-it:free',
     'meta-llama/llama-3.2-3b-instruct:free',
     'microsoft/phi-3-mini-128k-instruct:free',
