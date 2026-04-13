@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/auth/social",            "destination": "/api/auth?action=social" },
+    { "source": "/api/auth/promote",           "destination": "/api/auth?action=promote" },
+    { "source": "/api/avaliacoes/unidade/:id", "destination": "/api/avaliacoes?unidadeId=$id" },
+    { "source": "/api/unidades/:id",           "destination": "/api/unidades?id=$id" },
+    { "source": "/(.*)",                       "destination": "/index.html" }
+  ]
+}
