@@ -94,7 +94,7 @@ export async function deleteAvaliacao(avaliacaoId, unidadeId) {
   await r.sRem(`avaliacoes:unidade:${unidadeId}`, avaliacaoId)
 }
 
-
+export async function getAvaliacaoKey(usuarioId, unidadeId, tipo) {
   const r = await getClient()
   const mes = new Date().toISOString().slice(0, 7)
   return r.get(`avaliacao-lock:${usuarioId}:${unidadeId}:${tipo}:${mes}`)
