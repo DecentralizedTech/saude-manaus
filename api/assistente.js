@@ -18,29 +18,30 @@ export default async function handler(req, res) {
   if (!mensagem) return res.status(400).json({ error: 'mensagem obrigatória' })
 
   const unidades = await getUnidades()
+  const ativas = unidades.filter(u => u.ativo !== false && u.ativo !== 'false')
 
-  // Calcula scoreGeral de cada unidade buscando as avaliações
-  const linhas = await Promise.all(
-    unidades
-      .filter(u => u.ativo !== false && u.ativo !== 'false')
-      .map(async u => {
-        const avs = await getAvaliacoesUnidade(u.id)
-        let scoreText = 'sem dados'
-        if (avs.length >= 1) {
-          const porTipo = {}
-          for (const av of avs) {
-            if (!porTipo[av.tipoAtendimento]) porTipo[av.tipoAtendimento] = []
-            porTipo[av.tipoAtendimento].push(Number(av.score))
-          }
-          const mediaPorTipo = {}
-          for (const [tipo, scores] of Object.entries(porTipo))
-            mediaPorTipo[tipo] = scores.reduce((a, b) => a + b, 0) / scores.length
-          scoreText = calcularScoreGeral(mediaPorTipo).toFixed(1)
-        }
-        const rede = u.particular === 'true' ? 'Particular' : 'Público'
-        return `${u.nome}|${u.tipo}|${rede}|${u.bairro},Zona ${u.zona}|Tel:${u.telefone || 'S/N'}|Score:${scoreText}`
-      })
+  // Carrega avaliações em paralelo (mais rápido que sequencial)
+  const avaliacoesPorUnidade = await Promise.all(
+    ativas.map(u => getAvaliacoesUnidade(u.id))
   )
+
+  const linhas = ativas.map((u, i) => {
+    const avs = avaliacoesPorUnidade[i]
+    let scoreText = 'sem dados'
+    if (avs.length >= 1) {
+      const porTipo = {}
+      for (const av of avs) {
+        if (!porTipo[av.tipoAtendimento]) porTipo[av.tipoAtendimento] = []
+        porTipo[av.tipoAtendimento].push(Number(av.score))
+      }
+      const mediaPorTipo = {}
+      for (const [tipo, scores] of Object.entries(porTipo))
+        mediaPorTipo[tipo] = scores.reduce((a, b) => a + b, 0) / scores.length
+      scoreText = calcularScoreGeral(mediaPorTipo).toFixed(1)
+    }
+    const rede = u.particular === 'true' ? 'Particular' : 'Público'
+    return `${u.nome}|${u.tipo}|${rede}|${u.bairro},Zona ${u.zona}|Tel:${u.telefone || 'S/N'}|Score:${scoreText}`
+  })
 
   const resumo = linhas.join('\n')
 
