@@ -10,6 +10,7 @@ const MARKER_COLOR: Record<string, string> = {
   UPA:      '#f97316',
   SPA:      '#3b82f6',
   UFS:      '#16a34a',
+  POLICLINICA: '#9333ea',
 }
 
 function scoreColor(score: number) {
@@ -145,6 +146,9 @@ export default function Mapa() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-green-600 inline-block" />UFS
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-purple-600 inline-block" />Policlínica
           </div>
           <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-gray-200">
             <span className="w-3 h-3 rounded-full bg-green-600 inline-block" />Bom

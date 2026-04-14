@@ -269,7 +269,7 @@ export default function Admin() {
 
       {aba === 'unidades' && (<>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        {(['HOSPITAL','UPA','SPA','UFS'] as TipoUnidade[]).map(t => (
+        {(['HOSPITAL','UPA','SPA','UFS','POLICLINICA'] as TipoUnidade[]).map(t => (
           <div key={t} className="card text-center py-3">
             <p className="text-2xl font-bold">{unidades.filter(u => u.tipo === t).length}</p>
             <p className="text-xs text-gray-500">{TIPO_UNIDADE_LABEL[t]}s</p>

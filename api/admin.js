@@ -43,6 +43,16 @@ const UNIDADES = [
   { nome: 'Hospital Samel Boulevard', tipo: 'HOSPITAL', endereco: 'Rod. Álvaro Maia, 1445', bairro: 'Flores', zona: 'Centro-Sul', telefone: '(92) 2129-2200', lat: -3.0889, lng: -59.9956, particular: true },
   { nome: 'Hospital Pediátrico Rio Solimões', tipo: 'HOSPITAL', endereco: 'Rod. Álvaro Maia, 1131', bairro: 'Flores', zona: 'Centro-Sul', telefone: '', lat: -3.0912, lng: -59.9967, particular: true },
   { nome: 'Day Hospital Vieiralves', tipo: 'HOSPITAL', endereco: 'Rua Rio Amapá, 124', bairro: 'Nossa Senhora das Graças', zona: 'Centro-Sul', telefone: '(92) 98409-5436', lat: -3.1056, lng: -60.0045, particular: true },
+
+  // ── Policlínicas ─────────────────────────────────────────────────────────────
+  { nome: 'Policlínica Monte das Oliveiras', tipo: 'POLICLINICA', endereco: 'Rua Grumixava, s/n', bairro: 'Monte das Oliveiras', zona: 'Norte', telefone: '', lat: -2.9978, lng: -60.0123, particular: false },
+  { nome: 'Policlínica Parque Dez', tipo: 'POLICLINICA', endereco: 'Rua do Comércio, s/n', bairro: 'Parque Dez de Novembro', zona: 'Centro-Sul', telefone: '', lat: -3.0867, lng: -59.9934, particular: false },
+  { nome: 'Policlínica Compensa', tipo: 'POLICLINICA', endereco: 'Rua 23 de Dezembro, s/n', bairro: 'Compensa II', zona: 'Oeste', telefone: '', lat: -3.1023, lng: -60.0712, particular: false },
+  { nome: 'Policlínica Gov. Gilberto Mestrinho', tipo: 'POLICLINICA', endereco: 'Av. Getúlio Vargas, 341', bairro: 'Centro', zona: 'Centro-Sul', telefone: '(92) 99213-8618', lat: -3.1334, lng: -60.0189, particular: false },
+  { nome: 'Policlínica Codajás', tipo: 'POLICLINICA', endereco: 'Av. Codajás, 26', bairro: 'Cachoeirinha', zona: 'Centro-Sul', telefone: '(92) 3612-4200', lat: -3.1145, lng: -60.0078, particular: false },
+  { nome: 'Policlínica João dos Santos Braga', tipo: 'POLICLINICA', endereco: 'Av. Margarita, s/n', bairro: 'Nova Cidade', zona: 'Norte', telefone: '', lat: -3.0167, lng: -60.0401, particular: false },
+  { nome: 'Policlínica Antônio Aleixo', tipo: 'POLICLINICA', endereco: 'Av. Getúlio Vargas, s/n', bairro: 'Colônia Antônio Aleixo', zona: 'Leste', telefone: '(92) 98411-8139', lat: -3.0823, lng: -59.9334, particular: false },
+  { nome: 'Policlínica Dr. José Lins de Albuquerque', tipo: 'POLICLINICA', endereco: 'R. Maracanã, s/n', bairro: 'Redenção', zona: 'Centro-Oeste', telefone: '(92) 3652-8517', lat: -3.0812, lng: -60.0134, particular: false },
 ]
 
 const RESPOSTAS_TESTE = [
