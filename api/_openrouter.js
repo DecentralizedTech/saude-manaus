@@ -5,8 +5,8 @@ export async function chatCompletion(messages, maxTokens = 600) {
   const models = [
     'openai/gpt-oss-20b:free',
     'google/gemma-3-27b-it:free',
+    'meta-llama/llama-3.3-70b-instruct:free',
     'meta-llama/llama-3.2-3b-instruct:free',
-    'microsoft/phi-3-mini-128k-instruct:free',
   ]
 
   let lastError = ''
@@ -30,7 +30,7 @@ export async function chatCompletion(messages, maxTokens = 600) {
     const err = JSON.parse(text)
     lastError = text
     const code = err?.error?.code
-    if (code === 402 || code === 429 || code === 503) continue
+    if (code === 402 || code === 429 || code === 503 || code === 404) continue
     throw new Error(text)
   }
   throw new Error('Todos os modelos indisponíveis: ' + lastError)
