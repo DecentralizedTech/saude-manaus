@@ -58,8 +58,9 @@ export default function Assistente() {
       const historico = novas.slice(-6).map(m => ({ role: m.role, content: m.content }))
       const { data } = await api.post('/assistente', { mensagem: texto, historico })
       setMsgs(prev => [...prev, { role: 'assistant', content: data.resposta }])
-    } catch {
-      setMsgs(prev => [...prev, { role: 'assistant', content: 'Desculpe, ocorreu um erro. Tente novamente.' }])
+    } catch (e: any) {
+      const msg = e?.response?.data?.error || 'Não foi possível processar sua mensagem. Tente novamente em breve.'
+      setMsgs(prev => [...prev, { role: 'assistant', content: msg }])
     } finally {
       setLoading(false)
     }

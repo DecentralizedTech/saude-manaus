@@ -67,6 +67,9 @@ Formato: Nome|Tipo|Rede|Bairro,Zona|Telefone|Score`
     return res.status(200).json({ resposta })
   } catch (err) {
     console.error('Assistente error:', err.message)
-    return res.status(500).json({ error: err.message })
+    const amigavel = err.message?.includes('429') || err.message?.includes('rate')
+      ? 'O limite diário do assistente foi atingido. Tente novamente amanhã.'
+      : 'Não foi possível processar sua mensagem no momento. Tente novamente em breve.'
+    return res.status(500).json({ error: amigavel })
   }
 }

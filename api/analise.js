@@ -90,6 +90,9 @@ Escreva apenas o parágrafo, sem título.`
     return res.status(200).json({ analise: analise.trim() })
   } catch (err) {
     console.error('OpenRouter error:', err.message)
-    return res.status(500).json({ error: err.message })
+    const amigavel = err.message?.includes('429') || err.message?.includes('rate')
+      ? 'O limite diário de análises por IA foi atingido. Tente novamente amanhã.'
+      : 'Não foi possível gerar a análise no momento. Tente novamente em breve.'
+    return res.status(500).json({ error: amigavel })
   }
 }
