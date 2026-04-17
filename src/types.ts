@@ -16,6 +16,7 @@ export interface PontoSerie { semana: string; scoreGeral: number; total: number 
 export interface EstatisticasUnidade {
   estatisticas: EstatisticasTipo[]
   parametros: EstatisticaParametro[]
+  parametrosPorTipo: { tipo: string; label: string; parametros: EstatisticaParametro[] }[]
   serieScore: PontoSerie[]
   totalAvaliacoes: number
   scorePublicavel: boolean
