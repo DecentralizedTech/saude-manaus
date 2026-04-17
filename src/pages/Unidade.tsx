@@ -155,7 +155,10 @@ export default function UnidadePage() {
               <div key={grupo.tipo} className="card">
                 <h2 className="font-semibold text-gray-800 mb-1">Desempenho por Parâmetro</h2>
                 <p className="text-xs text-blue-600 font-medium mb-1">{grupo.label}</p>
-                <p className="text-xs text-gray-400 mb-4">% de respostas favoráveis por critério</p>
+                <p className="text-xs text-gray-400 mb-1">% de respostas favoráveis por critério</p>
+                <p className="text-xs text-amber-600 mb-4">
+                  ⚠️ Baseado em {grupo.parametros[0]?.total || 1} avaliação(ões) nesta categoria. Quanto mais avaliações, mais representativo o resultado.
+                </p>
                 <ResponsiveContainer width="100%" height={grupo.parametros.length * 36 + 20}>
                   <BarChart data={grupo.parametros} layout="vertical" margin={{ left: 8, right: 32, top: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
