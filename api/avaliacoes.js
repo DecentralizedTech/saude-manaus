@@ -66,11 +66,13 @@ export default async function handler(req, res) {
       total: scores.length, min: Math.min(...scores), max: Math.max(...scores),
     }))
 
-    const parametros = Object.entries(porParam).map(([key, d]) => ({
-      key, label: PARAM_LABEL[key] || key,
-      percentualPositivo: Math.round(d.positivos / d.total * 100),
-      total: d.total, invertido: INVERTIDOS.has(key),
-    })).sort((a,b) => b.percentualPositivo - a.percentualPositivo)
+    const parametros = Object.entries(porParam)
+      .filter(([, d]) => d.total >= 2 || d.positivos > 0) // só mostra se tem 2+ respostas OU pelo menos 1 positiva
+      .map(([key, d]) => ({
+        key, label: PARAM_LABEL[key] || key,
+        percentualPositivo: Math.round(d.positivos / d.total * 100),
+        total: d.total, invertido: INVERTIDOS.has(key),
+      })).sort((a,b) => b.percentualPositivo - a.percentualPositivo)
 
     const porSemana = {}
     for (const av of avaliacoes) {

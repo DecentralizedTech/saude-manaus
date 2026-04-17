@@ -58,11 +58,11 @@ export default function UnidadePage() {
   if (!unidade) return <div className="text-center py-20 text-gray-400">Unidade não encontrada.</div>
 
   const radarData = stats?.estatisticas.map(e => ({ tipo: e.label.split(' / ')[0], score: e.media })) || []
-  // Só mostra parâmetros que têm pelo menos 1 resposta real
+  // Só mostra parâmetros que têm dados reais (total > 0) — exclui os que só aparecem zerados
   const barData = (stats?.parametros || [])
-    .filter(p => p.total > 0)
+    .filter(p => p.total > 0 && (p.percentualPositivo > 0 || p.total >= 2))
     .map(p => ({ label: p.label, valor: p.percentualPositivo, invertido: p.invertido }))
-  const lineData  = (stats?.serieScore || []).map(p => ({ semana: p.semana.slice(5), score: p.scoreGeral }))
+  const lineData = (stats?.serieScore || []).map(p => ({ semana: p.semana.slice(5), score: p.scoreGeral }))
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-5">
