@@ -50,14 +50,14 @@ export default async function handler(req, res) {
     }
 
     const PARAM_LABEL = {
-      diagnostico_escrito: 'Diagnóstico por escrito', falta_materiais: 'Falta de materiais',
+      diagnostico_escrito: 'Diagnóstico por escrito', falta_materiais: 'Sem falta de materiais',
       tempo_espera: 'Tempo de espera', passou_triagem: 'Triagem realizada',
-      macas_suficientes: 'Macas suficientes', retornou_48h: 'Retorno em 48h',
+      macas_suficientes: 'Macas suficientes', retornou_48h: 'Não retornou em 48h',
       limpeza_visivel: 'Limpeza', banheiros_funcionando: 'Banheiros ok',
       prescricao_escrita: 'Prescrição por escrito', horario_agendado: 'Horário cumprido',
       plano_tratamento_escrito: 'Plano de tratamento', leito_disponivel: 'Leito disponível',
       resultado_prazo: 'Resultado no prazo', orientacao_resultado_escrita: 'Orientação do resultado',
-      exame_prazo: 'Exame no prazo', precisou_remarcar: 'Precisou remarcar',
+      exame_prazo: 'Exame no prazo', precisou_remarcar: 'Não precisou remarcar',
     }
 
     // Parâmetros agrupados por tipo de atendimento
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
         key, label: PARAM_LABEL[key] || key,
         percentualPositivo: Math.round(d.positivos / d.total * 100),
         total: d.total, invertido: INVERTIDOS.has(key),
-      })).filter(p => p.total > 0 && p.percentualPositivo > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
+      })).filter(p => p.total > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
     }))
 
     const estatisticas = Object.entries(porTipo).map(([tipo, scores]) => ({
