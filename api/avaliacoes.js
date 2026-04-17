@@ -82,7 +82,7 @@ export default async function handler(req, res) {
         key, label: PARAM_LABEL[key] || key,
         percentualPositivo: Math.round(d.positivos / d.total * 100),
         total: d.total, invertido: INVERTIDOS.has(key),
-      })).filter(p => p.total > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
+      })).filter(p => p.total > 0 && p.percentualPositivo > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
     }))
 
     const estatisticas = Object.entries(porTipo).map(([tipo, scores]) => ({
