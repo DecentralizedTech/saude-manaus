@@ -60,14 +60,37 @@ export default async function handler(req, res) {
       exame_prazo: 'Exame no prazo', precisou_remarcar: 'Precisou remarcar',
     }
 
-    const estatisticas = Object.entries(porTipo).map(([tipo, scores]) => ({
+    // Parâmetros agrupados por tipo de atendimento
+    const porParamPorTipo = {}
+    for (const av of avaliacoes) {
+      const tipo = av.tipoAtendimento
+      if (!porParamPorTipo[tipo]) porParamPorTipo[tipo] = {}
+      const r = av.respostas || {}
+      for (const [key, val] of Object.entries(r)) {
+        if (!PARAM_LABEL[key]) continue
+        if (!porParamPorTipo[tipo][key]) porParamPorTipo[tipo][key] = { positivos: 0, total: 0 }
+        porParamPorTipo[tipo][key].total++
+        if (typeof val === 'boolean') {
+          if (INVERTIDOS.has(key) ? !val : val) porParamPorTipo[tipo][key].positivos++
+        } else if (typeof val === 'number' && val <= 30) porParamPorTipo[tipo][key].positivos++
+      }
+    }
+
+    const parametrosPorTipo = Object.entries(porParamPorTipo).map(([tipo, params]) => ({
+      tipo, label: TIPO_LABEL[tipo] || tipo,
+      parametros: Object.entries(params).map(([key, d]) => ({
+        key, label: PARAM_LABEL[key] || key,
+        percentualPositivo: Math.round((d as any).positivos / (d as any).total * 100),
+        total: (d as any).total, invertido: INVERTIDOS.has(key),
+      })).filter(p => p.total > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
+    }))
       tipo, label: TIPO_LABEL[tipo] || tipo,
       media: Math.round((scores.reduce((a,b)=>a+b,0)/scores.length)*10)/10,
       total: scores.length, min: Math.min(...scores), max: Math.max(...scores),
     }))
 
     const parametros = Object.entries(porParam)
-      .filter(([, d]) => d.total >= 2 || d.positivos > 0) // só mostra se tem 2+ respostas OU pelo menos 1 positiva
+      .filter(([, d]) => d.total >= 2) // só mostra com 2+ respostas para ser representativo
       .map(([key, d]) => ({
         key, label: PARAM_LABEL[key] || key,
         percentualPositivo: Math.round(d.positivos / d.total * 100),
@@ -93,7 +116,7 @@ export default async function handler(req, res) {
       return { semana, scoreGeral: Math.round(calcularScoreGeral(mediaPorTipo)*10)/10, total: d.scores.length }
     })
 
-    return res.status(200).json({ estatisticas, parametros, serieScore, totalAvaliacoes: avaliacoes.length, scorePublicavel: avaliacoes.length >= 1 })
+    return res.status(200).json({ estatisticas, parametros, parametrosPorTipo, serieScore, totalAvaliacoes: avaliacoes.length, scorePublicavel: avaliacoes.length >= 1 })
   }
 
   // POST /api/avaliacoes

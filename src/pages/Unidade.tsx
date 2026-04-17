@@ -60,7 +60,7 @@ export default function UnidadePage() {
   const radarData = stats?.estatisticas.map(e => ({ tipo: e.label.split(' / ')[0], score: e.media })) || []
   // Só mostra parâmetros que têm dados reais (total > 0) — exclui os que só aparecem zerados
   const barData = (stats?.parametros || [])
-    .filter(p => p.total > 0 && (p.percentualPositivo > 0 || p.total >= 2))
+    .filter(p => p.total >= 2)
     .map(p => ({ label: p.label, valor: p.percentualPositivo, invertido: p.invertido }))
   const lineData = (stats?.serieScore || []).map(p => ({ semana: p.semana.slice(5), score: p.scoreGeral }))
 
@@ -149,32 +149,37 @@ export default function UnidadePage() {
           </div>
         )}
 
-        {barData.length > 0 && (
-          <div className="card">
-            <h2 className="font-semibold text-gray-800 mb-1">Desempenho por Parâmetro</h2>
-            <p className="text-xs text-gray-400 mb-4">% de respostas favoráveis por critério (apenas parâmetros com dados)</p>
-            <ResponsiveContainer width="100%" height={barData.length * 36 + 20}>
-              <BarChart data={barData} layout="vertical" margin={{ left: 8, right: 32, top: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" domain={[0, 100]} tickFormatter={(v: number) => `${v}%`} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="label" width={160} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number, _name: string, props: any) => {
-                  const item = barData[props.index]
-                  const desc = item?.invertido ? 'Sem ocorrência (favorável)' : 'Com ocorrência (favorável)'
-                  return [`${v}%`, desc]
-                }} />
-                <Bar dataKey="valor" radius={[0, 4, 4, 0]}>
-                  {barData.map((_e, i) => <Cell key={i} fill={barColor(barData[i].valor)} />)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-            <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-500">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-600 inline-block" />≥80% Bom</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-yellow-600 inline-block" />60–79% Regular</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-orange-600 inline-block" />40–59% Ruim</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block" />&lt;40% Crítico</span>
-            </div>
-          </div>
+        {stats && stats.parametrosPorTipo && stats.parametrosPorTipo.length > 0 && (
+          stats.parametrosPorTipo.map((grupo: any) => (
+            grupo.parametros.length > 0 && (
+              <div key={grupo.tipo} className="card">
+                <h2 className="font-semibold text-gray-800 mb-1">Desempenho por Parâmetro</h2>
+                <p className="text-xs text-blue-600 font-medium mb-1">{grupo.label}</p>
+                <p className="text-xs text-gray-400 mb-4">% de respostas favoráveis por critério</p>
+                <ResponsiveContainer width="100%" height={grupo.parametros.length * 36 + 20}>
+                  <BarChart data={grupo.parametros} layout="vertical" margin={{ left: 8, right: 32, top: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis type="number" domain={[0, 100]} tickFormatter={(v: number) => `${v}%`} tick={{ fontSize: 11 }} />
+                    <YAxis type="category" dataKey="label" width={160} tick={{ fontSize: 11 }} />
+                    <Tooltip formatter={(v: number, _name: string, props: any) => {
+                      const item = grupo.parametros[props.index]
+                      const desc = item?.invertido ? 'Sem ocorrência (favorável)' : 'Com ocorrência (favorável)'
+                      return [`${v}%`, desc]
+                    }} />
+                    <Bar dataKey="percentualPositivo" radius={[0, 4, 4, 0]}>
+                      {grupo.parametros.map((_e: any, i: number) => <Cell key={i} fill={barColor(grupo.parametros[i].percentualPositivo)} />)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+                <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-500">
+                  <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-600 inline-block" />≥80% Bom</span>
+                  <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-yellow-600 inline-block" />60–79% Regular</span>
+                  <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-orange-600 inline-block" />40–59% Ruim</span>
+                  <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block" />&lt;40% Crítico</span>
+                </div>
+              </div>
+            )
+          ))
         )}
 
         {lineData.length >= 2 && (
