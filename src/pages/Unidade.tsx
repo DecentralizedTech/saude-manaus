@@ -58,7 +58,10 @@ export default function UnidadePage() {
   if (!unidade) return <div className="text-center py-20 text-gray-400">Unidade não encontrada.</div>
 
   const radarData = stats?.estatisticas.map(e => ({ tipo: e.label.split(' / ')[0], score: e.media })) || []
-  const barData   = (stats?.parametros || []).map(p => ({ label: p.label, valor: p.percentualPositivo }))
+  // Só mostra parâmetros que têm pelo menos 1 resposta real
+  const barData = (stats?.parametros || [])
+    .filter(p => p.total > 0)
+    .map(p => ({ label: p.label, valor: p.percentualPositivo, invertido: p.invertido }))
   const lineData  = (stats?.serieScore || []).map(p => ({ semana: p.semana.slice(5), score: p.scoreGeral }))
 
   return (
@@ -149,13 +152,17 @@ export default function UnidadePage() {
         {barData.length > 0 && (
           <div className="card">
             <h2 className="font-semibold text-gray-800 mb-1">Desempenho por Parâmetro</h2>
-            <p className="text-xs text-gray-400 mb-4">% de respostas positivas por critério</p>
+            <p className="text-xs text-gray-400 mb-4">% de respostas favoráveis por critério (apenas parâmetros com dados)</p>
             <ResponsiveContainer width="100%" height={barData.length * 36 + 20}>
               <BarChart data={barData} layout="vertical" margin={{ left: 8, right: 32, top: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                 <XAxis type="number" domain={[0, 100]} tickFormatter={(v: number) => `${v}%`} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="label" width={160} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number) => [`${v}%`, 'Positivo']} />
+                <Tooltip formatter={(v: number, _name: string, props: any) => {
+                  const item = barData[props.index]
+                  const desc = item?.invertido ? 'Sem ocorrência (favorável)' : 'Com ocorrência (favorável)'
+                  return [`${v}%`, desc]
+                }} />
                 <Bar dataKey="valor" radius={[0, 4, 4, 0]}>
                   {barData.map((_e, i) => <Cell key={i} fill={barColor(barData[i].valor)} />)}
                 </Bar>
