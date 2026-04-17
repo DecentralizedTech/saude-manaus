@@ -80,10 +80,12 @@ export default async function handler(req, res) {
       tipo, label: TIPO_LABEL[tipo] || tipo,
       parametros: Object.entries(params).map(([key, d]) => ({
         key, label: PARAM_LABEL[key] || key,
-        percentualPositivo: Math.round((d as any).positivos / (d as any).total * 100),
-        total: (d as any).total, invertido: INVERTIDOS.has(key),
+        percentualPositivo: Math.round(d.positivos / d.total * 100),
+        total: d.total, invertido: INVERTIDOS.has(key),
       })).filter(p => p.total > 0).sort((a, b) => b.percentualPositivo - a.percentualPositivo)
     }))
+
+    const estatisticas = Object.entries(porTipo).map(([tipo, scores]) => ({
       tipo, label: TIPO_LABEL[tipo] || tipo,
       media: Math.round((scores.reduce((a,b)=>a+b,0)/scores.length)*10)/10,
       total: scores.length, min: Math.min(...scores), max: Math.max(...scores),
